@@ -6,16 +6,25 @@ const initialEmail = ''
 const initialSteps = 0
 const initialIndex = 4 // the index the "B" is at
 
-const initialState = {
-  message: initialMessage,
-  email: initialEmail,
-  index: initialIndex,
-  steps: initialSteps,
-}
+// const initialState = {
+//   message: initialMessage,
+//   email: initialEmail,
+//   index: initialIndex,
+//   steps: initialSteps,
+// }
 
 export default class AppClass extends React.Component {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: initialMessage,
+      email: initialEmail,
+      index: initialIndex,
+      steps: initialSteps,
+    };
+  }
 
   getXY = () => {
     // It it not necessary to have a state to track the coordinates.
