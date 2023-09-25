@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import axios from "axios";
 
 // Suggested initial states
 const initialMessage = "";
@@ -10,12 +11,11 @@ const initialIndex = 4; // the index the "B" is at
 export default function AppFunctional(props) {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
-  const [value, setValue] = useState(
-    (initialMessage = ""),
-    (initialEmail = ""),
-    (initialSteps = 0),
-    (initialIndex = 4)
-  );
+  const [message, setMessage] = useState(""); // Initialize message state
+  const [email, setEmail] = useState(""); // Initialize email state
+  const [x, setX] = useState(2);
+  const [y, setY] = useState(2);
+  const [steps, setSteps] = useState(0);
 
   function getXY() {
     // It it not necessary to have a state to track the coordinates.
@@ -45,7 +45,6 @@ export default function AppFunctional(props) {
 
   function onChange(evt) {
     // You will need this to update the value of the input.
-    e.preventDefualt();
   }
 
   function onSubmit(evt) {

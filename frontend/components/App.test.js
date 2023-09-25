@@ -1,4 +1,6 @@
 // Write your tests here
+import AppFunctional from "./AppFunctional"
+import React from "react"
 test('sanity', () => {
-  expect(true).toBe(false)
+  render(<AppFunctional />)
 })
