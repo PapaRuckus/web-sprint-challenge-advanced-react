@@ -21,7 +21,6 @@ export default function AppFunctional(props) {
   function getXY() {
     // It it not necessary to have a state to track the coordinates.
     // It's enough to know what index the "B" is at, to be able to calculate them.
-    return { x, y };
   }
 
   function getXYMessage() {
@@ -40,24 +39,52 @@ export default function AppFunctional(props) {
   }
 
   function getNextIndex(direction) {
-    // This helper takes a direction ("left", "up", etc) and calculates what the next index
-    // of the "B" would be. If the move is impossible because we are at the edge of the grid,
-    // this helper should return the current index unchanged.
+    const minX = 1;
+    const minY = 1;
+    const maxX = 3;
+    const maxY = 3;
+
+    let nextX = x;
+    console.log("this is x", nextX)
+    let nextY = y;
+    console.log("this is y" , nextY)
+
+    switch (direction) {
+      case "left":
+        nextX = Math.max(minX, x - 1);
+        break;
+      case "right":
+        nextX = Math.min(maxX, x + 1);
+        break;
+      case "up":
+        nextY = Math.max(minY, y - 1);
+        break;
+      case "down":
+        nextY = Math.min(maxY, y + 1);
+        break;
+      default:
+        break;
+    }
+
+    return { nextX, nextY };
   }
 
-  function move(evt) {
-    // This event handler can use the helper above to obtain a new index for the "B",
-    // and change any states accordingly.
+  function move(direction) {
+    const { nextX, nextY } = getNextIndex(direction);
+
+    setX(nextX);
+    setY(nextY);
+
+    setSteps(steps + 1);
   }
+
 
   function onChange(evt) {
-    // You will need this to update the value of the input.
     evt.preventDefault();
     setEmail(evt.target.value);
   }
 
   function onSubmit(evt) {
-    // Use a POST request to send a payload to the server.
     evt.preventDefault();
     const payload = {
       x: x,
@@ -88,33 +115,38 @@ export default function AppFunctional(props) {
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">
-          Coordinates {x}, {y}
+          Coordinates ({x}, {y})
         </h3>
         <h3 id="steps">You moved {steps} times</h3>
       </div>
+
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
-          <div key={idx} className={`square${idx === 4 ? " active" : ""}`}>
+          <div key={idx}
+            className={`square${idx === 4 ? " active" : ""}`}
+          >
             {idx === 4 ? "B" : null}
           </div>
         ))}
       </div>
+      
       <div className="info">
         <h3 id="message">{message}</h3>
       </div>
       <div id="keypad">
-        <button id="left" onClick={stepCounter}>
+        <button id="left" onClick={() => move("left")}>
           LEFT
         </button>
-        <button id="up" onClick={stepCounter}>
+        <button id="up" onClick={() => move("up")}>
           UP
         </button>
-        <button id="right" onClick={stepCounter}>
+        <button id="right" onClick={() => move("right")}>
           RIGHT
         </button>
-        <button id="down" onClick={stepCounter}>
+        <button id="down" onClick={() => move("down")}>
           DOWN
         </button>
+
         <button id="reset" onClick={reset}>
           reset
         </button>

@@ -43,6 +43,7 @@ export default class AppClass extends React.Component {
 
   reset = () => {
     // Use this helper to reset all states to their initial values.
+    this.setState({ ...this.state, steps: this.state.steps });
   };
 
   getNextIndex = (direction) => {
@@ -65,12 +66,12 @@ export default class AppClass extends React.Component {
   };
 
   render() {
-    const { className } = this.props;
+    const { className, steps } = this.props;
     return (
       <div id="wrapper" className={className}>
         <div className="info">
           <h3 id="coordinates">Coordinates (2, 2)</h3>
-          <h3 id="steps">You moved 0 times</h3>
+          <h3 id="steps">You moved {this.props.steps} times</h3>
         </div>
         <div id="grid">
           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
@@ -82,7 +83,7 @@ export default class AppClass extends React.Component {
         <div className="info">
           <h3 id="message"></h3>
         </div>
-        <div id="keypad">
+        <div id="keypad" onClick={() => this.steps + 1}>
           <button id="left">LEFT</button>
           <button id="up">UP</button>
           <button id="right">RIGHT</button>
