@@ -97,10 +97,12 @@ export default function AppFunctional(props) {
       .then((response) => {
         setEmail("");
         setMessage(response.data.message);
+        // console.log(response)
       })
       .catch((error) => {
         if (email === "foo@bar.baz") {
-          setMessage("foo@bar.baz failure");
+          setMessage(error.response.data.message);
+          // console.log(error)
         } else {
           setMessage("Ouch: email is required");
         }
@@ -129,7 +131,7 @@ export default function AppFunctional(props) {
           </div>
         ))}
       </div>
-      
+
       <div className="info">
         <h3 id="message">{message}</h3>
       </div>
