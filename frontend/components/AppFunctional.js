@@ -36,7 +36,42 @@ export default function AppFunctional(props) {
     setSteps(0);
   }
 
-  function getNextIndex(direction) {
+  // function getNextIndex(direction) {
+  //   const minX = 1;
+  //   const minY = 1;
+  //   const maxX = 3;
+  //   const maxY = 3;
+
+  //   let nextX = x
+  //   // console.log("this is x", nextX)
+  //   let nextY = y
+  //   // console.log("this is y" , nextY)
+
+  //   switch (direction) {
+  //     case "left":
+  //       nextX = (Math.max(minX, x - 1));
+  //       console.log(nextX);
+  //       break;
+  //     case "right":
+  //       nextX = Math.min(maxX, x + 1);
+  //       console.log(nextX);
+  //       break;
+  //     case "up":
+  //       nextY = Math.max(minY, y - 1);
+  //       console.log(nextY);
+  //       break;
+  //     case "down":
+  //       nextY = Math.min(maxY, y + 1);
+  //       console.log(nextY);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+
+  //   return { nextX, nextY };
+  // }
+
+  function move(direction) {
     const minX = 1;
     const minY = 1;
     const maxX = 3;
@@ -49,32 +84,42 @@ export default function AppFunctional(props) {
 
     switch (direction) {
       case "left":
-        nextX = Math.max(minX, x - 1);
+        nextX = x - 1;
         break;
       case "right":
-        nextX = Math.min(maxX, x + 1);
+        nextX = x + 1;
         break;
       case "up":
-        nextY = Math.max(minY, y - 1);
+        nextY = y - 1;
         break;
       case "down":
-        nextY = Math.min(maxY, y + 1);
+        nextY = y + 1;
         break;
       default:
         break;
     }
-
-    return { nextX, nextY };
-  }
-
-  function move(direction) {
-    const { nextX, nextY } = getNextIndex(direction);
+    if (nextX < 4 && nextY < 4 && nextX > 0 && nextY > 0) {
+      setSteps(steps + 1);
+    }
+    if (nextX < 1) {
+      nextX = 1;
+      setMessage("you cant go left");
+    }
+    if (nextX > 3) {
+      nextX = 3;
+      setMessage("you cant go right");
+    }
+    if (nextY < 1) {
+      nextY = 1;
+      setMessage("you cant go up");
+    }
+    if (nextY > 3) {
+      nextY = 3;
+      setMessage("you cant go down");
+    }
 
     setX(nextX);
     setY(nextY);
-    // setTarget({ x, y })
-
-    setSteps(steps + 1);
   }
 
   useEffect(() => {
@@ -120,12 +165,49 @@ export default function AppFunctional(props) {
   function getItWorking(index) {
     //Get the css attribute grid-template-columns from the css of class grid
     //split on whitespace and get the length, this will give you how many columns
-    const colCount = 3;
+    let rowPosition;
+    let colPosition;
+    switch (index) {
+      case 0:
+      case 3:
+      case 6:
+        colPosition = 1;
+        break;
+      case 1:
+      case 4:
+      case 7:
+        colPosition = 2;
+        break;
+      case 2:
+      case 5:
+      case 8:
+        colPosition = 3;
+        break;
+      default:
+        break;
+    }
 
-    const rowPosition = Math.floor(index / colCount) + 1;
-    const colPosition = (index % colCount) + 1;
+    switch (index) {
+      case 0:
+      case 1:
+      case 2:
+        rowPosition = 1;
+        break;
+      case 3:
+      case 4:
+      case 5:
+        rowPosition = 2;
+        break;
+      case 6:
+      case 7:
+      case 8:
+        rowPosition = 3;
+        break;
+      default:
+        break;
+    }
 
-    const results = { x: rowPosition, y: colPosition };
+    const results = { colPosition, rowPosition };
     return (
       Object.values(target)[0] === Object.values(results)[0] &&
       Object.values(target)[1] === Object.values(results)[1]
@@ -147,7 +229,7 @@ export default function AppFunctional(props) {
             key={idx}
             className={`square${getItWorking(idx) ? " active" : ""}`}
           >
-            {idx === 4 ? "B" : null}
+            {getItWorking(idx) ? "B" : ""}
           </div>
         ))}
       </div>
