@@ -16,10 +16,12 @@ export default function AppFunctional(props) {
   const [x, setX] = useState(2);
   const [y, setY] = useState(2);
   const [steps, setSteps] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
 
   function getXY() {
     // It it not necessary to have a state to track the coordinates.
     // It's enough to know what index the "B" is at, to be able to calculate them.
+    return { x, y };
   }
 
   function getXYMessage() {
@@ -30,6 +32,11 @@ export default function AppFunctional(props) {
 
   function reset() {
     // Use this helper to reset all states to their initial values.
+    setEmail("");
+    setMessage("");
+    setX(2);
+    setY(2);
+    setSteps(0);
   }
 
   function getNextIndex(direction) {
@@ -45,17 +52,45 @@ export default function AppFunctional(props) {
 
   function onChange(evt) {
     // You will need this to update the value of the input.
+    evt.preventDefault();
+    setEmail(evt.target.value);
   }
 
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.
+    evt.preventDefault();
+    const payload = {
+      x: x,
+      y: y,
+      steps: steps,
+      email: email,
+    };
+    axios
+      .post("http://localhost:9000/api/result", payload)
+      .then((response) => {
+        setEmail("");
+        setMessage(response.data.message);
+      })
+      .catch((error) => {
+        if (email === "foo@bar.baz") {
+          setMessage("foo@bar.baz failure");
+        } else {
+          setMessage("Ouch: email is required");
+        }
+      });
+  }
+
+  function stepCounter() {
+    setSteps(steps + 1);
   }
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Coordinates (2, 2)</h3>
-        <h3 id="steps">You moved 0 times</h3>
+        <h3 id="coordinates">
+          Coordinates {x}, {y}
+        </h3>
+        <h3 id="steps">You moved {steps} times</h3>
       </div>
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
@@ -65,17 +100,33 @@ export default function AppFunctional(props) {
         ))}
       </div>
       <div className="info">
-        <h3 id="message"></h3>
+        <h3 id="message">{message}</h3>
       </div>
       <div id="keypad">
-        <button id="left">LEFT</button>
-        <button id="up">UP</button>
-        <button id="right">RIGHT</button>
-        <button id="down">DOWN</button>
-        <button id="reset">reset</button>
+        <button id="left" onClick={stepCounter}>
+          LEFT
+        </button>
+        <button id="up" onClick={stepCounter}>
+          UP
+        </button>
+        <button id="right" onClick={stepCounter}>
+          RIGHT
+        </button>
+        <button id="down" onClick={stepCounter}>
+          DOWN
+        </button>
+        <button id="reset" onClick={reset}>
+          reset
+        </button>
       </div>
-      <form>
-        <input id="email" type="email" placeholder="type email"></input>
+      <form onSubmit={onSubmit}>
+        <input
+          id="email"
+          type="email"
+          placeholder="type email"
+          onChange={onChange}
+          value={email}
+        ></input>
         <input id="submit" type="submit"></input>
       </form>
     </div>
