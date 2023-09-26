@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 // Suggested initial states
@@ -17,11 +17,9 @@ export default function AppFunctional(props) {
   const [y, setY] = useState(2);
   const [steps, setSteps] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+  const [target, setTarget] = useState({ x, y });
 
-  function getXY() {
-    // It it not necessary to have a state to track the coordinates.
-    // It's enough to know what index the "B" is at, to be able to calculate them.
-  }
+  function getXY() {}
 
   function getXYMessage() {
     // It it not necessary to have a state to track the "Coordinates (2, 2)" message for the user.
@@ -45,9 +43,9 @@ export default function AppFunctional(props) {
     const maxY = 3;
 
     let nextX = x;
-    console.log("this is x", nextX)
+    // console.log("this is x", nextX)
     let nextY = y;
-    console.log("this is y" , nextY)
+    // console.log("this is y" , nextY)
 
     switch (direction) {
       case "left":
@@ -74,10 +72,16 @@ export default function AppFunctional(props) {
 
     setX(nextX);
     setY(nextY);
+    // setTarget({ x, y })
 
     setSteps(steps + 1);
   }
 
+  useEffect(() => {
+    setTarget({ x, y });
+  }, [x, y]);
+
+  // console.log(getItWorking(0))
 
   function onChange(evt) {
     evt.preventDefault();
@@ -113,6 +117,21 @@ export default function AppFunctional(props) {
     setSteps(steps + 1);
   }
 
+  function getItWorking(index) {
+    //Get the css attribute grid-template-columns from the css of class grid
+    //split on whitespace and get the length, this will give you how many columns
+    const colCount = 3;
+
+    const rowPosition = Math.floor(index / colCount) + 1;
+    const colPosition = (index % colCount) + 1;
+
+    const results = { x: rowPosition, y: colPosition };
+    return (
+      Object.values(target)[0] === Object.values(results)[0] &&
+      Object.values(target)[1] === Object.values(results)[1]
+    );
+  }
+
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
@@ -124,8 +143,9 @@ export default function AppFunctional(props) {
 
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
-          <div key={idx}
-            className={`square${idx === 4 ? " active" : ""}`}
+          <div
+            key={idx}
+            className={`square${getItWorking(idx) ? " active" : ""}`}
           >
             {idx === 4 ? "B" : null}
           </div>

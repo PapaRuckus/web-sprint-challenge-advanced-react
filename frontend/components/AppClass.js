@@ -24,11 +24,12 @@ export default class AppClass extends React.Component {
       message: initialMessage,
       email: initialEmail,
       index: initialIndex,
-      steps: initialSteps,
+      steps: 0,
       x: initialX,
       y: initialY,
     };
   }
+  
 
   getXY = () => {
     // It it not necessary to have a state to track the coordinates.
@@ -71,7 +72,7 @@ export default class AppClass extends React.Component {
       <div id="wrapper" className={className}>
         <div className="info">
           <h3 id="coordinates">Coordinates (2, 2)</h3>
-          <h3 id="steps">You moved {this.props.steps} times</h3>
+          <h3 id="steps">You moved {steps} times</h3>
         </div>
         <div id="grid">
           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
@@ -83,7 +84,7 @@ export default class AppClass extends React.Component {
         <div className="info">
           <h3 id="message"></h3>
         </div>
-        <div id="keypad" onClick={() => this.steps + 1}>
+        <div id="keypad">
           <button id="left">LEFT</button>
           <button id="up">UP</button>
           <button id="right">RIGHT</button>
