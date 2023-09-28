@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import axios from "axios";
 
 // Suggested initial states
@@ -14,6 +15,9 @@ const initialState = {
   email: initialEmail,
   index: initialIndex,
   steps: initialSteps,
+  x: initialX,
+  y: initialY,
+  target: { x: initialX, y: initialY },
 };
 
 export default class AppClass extends React.Component {
@@ -24,8 +28,6 @@ export default class AppClass extends React.Component {
     // console.log("constructor called")
     this.state = {
       ...initialState,
-      x: initialX,
-      y: initialY,
     };
   }
 
@@ -40,20 +42,15 @@ export default class AppClass extends React.Component {
     // returns the fully constructed string.
   };
 
-  reset = () => {
-    // Use this helper to reset all states to their initial values.
-    this.setState({ ...initialState, x: initialX, y: initialY });
-  };
-
   getNextIndex = (direction) => {
     // This helper takes a direction ("left", "up", etc) and calculates what the next index
     // of the "B" would be. If the move is impossible because we are at the edge of the grid,
     // this helper should return the current index unchanged.
   };
 
-  move = (evt) => {
-    // This event handler can use the helper above to obtain a new index for the "B",
-    // and change any states accordingly.
+  reset = () => {
+    // Use this helper to reset all states to their initial values.
+    this.setState({ ...initialState, x: initialX, y: initialY });
   };
 
   onChange = (evt) => {
@@ -85,6 +82,110 @@ export default class AppClass extends React.Component {
       });
   };
 
+  move = (direction) => {
+    const minX = 1;
+    const minY = 1;
+    const maxX = 3;
+    const maxY = 3;
+
+    let nextX = this.state.x;
+    let nextY = this.state.y;
+    let newMessage = "";
+
+    switch (direction) {
+      case "left":
+        nextX = this.state.x - 1;
+        break;
+      case "right":
+        nextX = this.state.x + 1;
+        break;
+      case "up":
+        nextY = this.state.y - 1;
+        break;
+      case "down":
+        nextY = this.state.y + 1;
+        break;
+      default:
+        break;
+    }
+    if (nextX < 4 && nextY < 4 && nextX > 0 && nextY > 0) {
+      this.setState((prevState) => ({
+        x: nextX,
+        y: nextY,
+        steps: prevState.steps + 1,
+      }));
+    }
+    if (nextX < 1) {
+      this.setState({ message: "You can't go left" });
+    }
+    if (nextX > 3) {
+      this.setState({ message: "You can't go right" });
+    }
+    if (nextY < 1) {
+      this.setState({ message: "You can't go up" });
+    }
+    if (nextY > 3) {
+      this.setState({ message: "You can't go down" });
+    }
+  };
+
+  movingB = (index) => {
+    let rowPosition;
+    let colPosition;
+    const newTarget = this.state.target
+
+    switch (index) {
+      case 0:
+      case 3:
+      case 6:
+        colPosition = 1;
+        break;
+      case 1:
+      case 4:
+      case 7:
+        colPosition = 2;
+        break;
+      case 2:
+      case 5:
+      case 8:
+        colPosition = 3;
+        break;
+      default:
+        break;
+    }
+
+    switch (index) {
+      case 0:
+      case 1:
+      case 2:
+        rowPosition = 1;
+        break;
+      case 3:
+      case 4:
+      case 5:
+        rowPosition = 2;
+        break;
+      case 6:
+      case 7:
+      case 8:
+        rowPosition = 3;
+        break;
+      default:
+        break;
+    }
+
+    const results = { colPosition, rowPosition };
+    return (
+      newTarget.x === Object.values(results)[0] && newTarget.y === Object.values(results)[1]
+    );
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.x !== prevState.x || this.state.y !== prevState.y) {
+      this.setState({ target: { x: this.state.x, y: this.state.y }, message: "" });
+    }
+  }
+
   stepCounter = () => {
     this.setState((prev) => ({
       steps: prev.steps + 1,
@@ -98,7 +199,7 @@ export default class AppClass extends React.Component {
       <div id="wrapper" className={className}>
         <div className="info">
           <h3 id="coordinates">
-            Coordinates {x}, {y}
+            Coordinates ({x}, {y})
           </h3>
           <h3 id="steps">You moved {steps} times</h3>
         </div>
@@ -113,16 +214,16 @@ export default class AppClass extends React.Component {
           <h3 id="message">{message}</h3>
         </div>
         <div id="keypad">
-          <button id="left" onClick={this.stepCounter}>
+          <button id="left" onClick={() => this.move("left")}>
             LEFT
           </button>
-          <button id="up" onClick={this.stepCounter}>
+          <button id="up" onClick={() => this.move("up")}>
             UP
           </button>
-          <button id="right" onClick={this.stepCounter}>
+          <button id="right" onClick={() => this.move("right")}>
             RIGHT
           </button>
-          <button id="down" onClick={this.stepCounter}>
+          <button id="down" onClick={() => this.move("down")}>
             DOWN
           </button>
           <button id="reset" onClick={this.reset}>

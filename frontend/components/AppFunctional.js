@@ -107,62 +107,22 @@ export default function AppFunctional(props) {
     }
     if (nextX > 3) {
       nextX = 3;
-      setMessage("You cant go right");
+      setMessage("You can't go right");
     }
     if (nextY < 1) {
       nextY = 1;
-      setMessage("You cant go up");
+      setMessage("You can't go up");
     }
     if (nextY > 3) {
       nextY = 3;
-      setMessage("You cant go down");
+      setMessage("You can't go down");
     }
 
     setX(nextX);
     setY(nextY);
   }
 
-  useEffect(() => {
-    setTarget({ x, y });
-  }, [x, y]);
-
-  function onChange(evt) {
-    evt.preventDefault();
-    setEmail(evt.target.value);
-  }
-
-  function onSubmit(evt) {
-    evt.preventDefault();
-    const payload = {
-      x: x,
-      y: y,
-      steps: steps,
-      email: email,
-    };
-    axios
-      .post("http://localhost:9000/api/result", payload)
-      .then((response) => {
-        setEmail("");
-        setMessage(response.data.message);
-        // console.log(response)
-      })
-      .catch((error) => {
-        if (email === "foo@bar.baz") {
-          setMessage(error.response.data.message);
-          // console.log(error)
-        } else {
-          setMessage("Ouch: email is required");
-        }
-      });
-  }
-
-  function stepCounter() {
-    setSteps(steps + 1);
-  }
-
   function movingB(index) {
-    //Get the css attribute grid-template-columns from the css of class grid
-    //split on whitespace and get the length, this will give you how many columns
     let rowPosition;
     let colPosition;
     switch (index) {
@@ -212,6 +172,45 @@ export default function AppFunctional(props) {
     );
   }
 
+  useEffect(() => {
+    setTarget({ x, y });
+    setMessage("")
+  }, [x, y]);
+
+  function onChange(evt) {
+    evt.preventDefault();
+    setEmail(evt.target.value);
+  }
+
+  function onSubmit(evt) {
+    evt.preventDefault();
+    const payload = {
+      x: x,
+      y: y,
+      steps: steps,
+      email: email,
+    };
+    axios
+      .post("http://localhost:9000/api/result", payload)
+      .then((response) => {
+        setEmail("");
+        setMessage(response.data.message);
+        // console.log(response)
+      })
+      .catch((error) => {
+        if (email === "foo@bar.baz") {
+          setMessage(error.response.data.message);
+          // console.log(error)
+        } else {
+          setMessage("Ouch: email is required");
+        }
+      });
+  }
+
+  function stepCounter() {
+    setSteps(steps + 1);
+  }
+
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
@@ -224,7 +223,7 @@ export default function AppFunctional(props) {
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
           <div key={idx} className={`square${movingB(idx) ? " active" : ""}`}>
-            {movingB(idx) ? "B" : ""}
+            {movingB(idx) ? "B" : null}
           </div>
         ))}
       </div>
