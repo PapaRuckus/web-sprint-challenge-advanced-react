@@ -8,28 +8,25 @@ const initialIndex = 4; // the index the "B" is at
 const initialX = 2;
 const initialY = 2;
 
-// const initialState = {
-//   message: initialMessage,
-//   email: initialEmail,
-//   index: initialIndex,
-//   steps: initialSteps,
-// }
+const initialState = {
+  message: initialMessage,
+  email: initialEmail,
+  index: initialIndex,
+  steps: initialSteps,
+};
 
 export default class AppClass extends React.Component {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
   constructor(props) {
     super(props);
+    // console.log("constructor called")
     this.state = {
-      message: initialMessage,
-      email: initialEmail,
-      index: initialIndex,
-      steps: initialSteps,
+      ...initialState,
       x: initialX,
       y: initialY,
     };
   }
-  
 
   getXY = () => {
     // It it not necessary to have a state to track the coordinates.
@@ -44,7 +41,7 @@ export default class AppClass extends React.Component {
 
   reset = () => {
     // Use this helper to reset all states to their initial values.
-    // this.setState({ ...this.state, steps: this.state.steps });
+    this.setState({ ...initialState, x: initialX, y: initialY });
   };
 
   getNextIndex = (direction) => {
@@ -66,13 +63,22 @@ export default class AppClass extends React.Component {
     // Use a POST request to send a payload to the server.
   };
 
+  stepCounter = () => {
+    this.setState((prev) => ({
+      steps: prev.steps + 1,
+    }));
+  };
+
   render() {
-    const { className, steps } = this.props;
+    const { className } = this.props;
+    const { steps, x, y, email, message } = this.state;
     return (
       <div id="wrapper" className={className}>
         <div className="info">
-          <h3 id="coordinates">Coordinates (2, 2)</h3>
-          <h3 id="steps">You moved {this.steps} times</h3>
+          <h3 id="coordinates">
+            Coordinates {x}, {y}
+          </h3>
+          <h3 id="steps">You moved {steps} times</h3>
         </div>
         <div id="grid">
           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
@@ -85,11 +91,21 @@ export default class AppClass extends React.Component {
           <h3 id="message"></h3>
         </div>
         <div id="keypad">
-          <button id="left">LEFT</button>
-          <button id="up">UP</button>
-          <button id="right">RIGHT</button>
-          <button id="down">DOWN</button>
-          <button id="reset">reset</button>
+          <button id="left" onClick={this.stepCounter}>
+            LEFT
+          </button>
+          <button id="up" onClick={this.stepCounter}>
+            UP
+          </button>
+          <button id="right" onClick={this.stepCounter}>
+            RIGHT
+          </button>
+          <button id="down" onClick={this.stepCounter}>
+            DOWN
+          </button>
+          <button id="reset" onClick={this.reset}>
+            reset
+          </button>
         </div>
         <form>
           <input id="email" type="email" placeholder="type email"></input>
