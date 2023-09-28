@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 // Suggested initial states
 const initialMessage = "";
@@ -57,10 +58,31 @@ export default class AppClass extends React.Component {
 
   onChange = (evt) => {
     // You will need this to update the value of the input.
+    evt.preventDefault();
+    this.setState({ email: evt.target.value });
   };
 
   onSubmit = (evt) => {
     // Use a POST request to send a payload to the server.
+    evt.preventDefault();
+    const payload = {
+      x: this.state.x,
+      y: this.state.y,
+      steps: this.state.steps,
+      email: this.state.email,
+    };
+    axios
+      .post("http://localhost:9000/api/result", payload)
+      .then((response) => {
+        this.setState({ message: response.data.message, email: "" });
+      })
+      .catch((error) => {
+        if (this.state.email === "foo@bar.baz") {
+          this.setState({ message: error.response.data.message });
+        } else {
+          this.setState({ message: "Ouch: email is required" });
+        }
+      });
   };
 
   stepCounter = () => {
@@ -88,7 +110,7 @@ export default class AppClass extends React.Component {
           ))}
         </div>
         <div className="info">
-          <h3 id="message"></h3>
+          <h3 id="message">{message}</h3>
         </div>
         <div id="keypad">
           <button id="left" onClick={this.stepCounter}>
@@ -107,8 +129,14 @@ export default class AppClass extends React.Component {
             reset
           </button>
         </div>
-        <form>
-          <input id="email" type="email" placeholder="type email"></input>
+        <form onSubmit={this.onSubmit}>
+          <input
+            id="email"
+            type="email"
+            placeholder="type email"
+            value={email}
+            onChange={this.onChange}
+          ></input>
           <input id="submit" type="submit"></input>
         </form>
       </div>
