@@ -9,26 +9,16 @@ const initialSteps = 0;
 const initialIndex = 4; // the index the "B" is at
 
 export default function AppFunctional(props) {
-  // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
-  // You can delete them and build your own logic from scratch.
-  const [message, setMessage] = useState(""); // Initialize message state
-  const [email, setEmail] = useState(""); // Initialize email state
+  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState(""); 
   const [x, setX] = useState(2);
   const [y, setY] = useState(2);
   const [steps, setSteps] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const [target, setTarget] = useState({ x, y });
 
-  function getXY() {}
-
-  function getXYMessage() {
-    // It it not necessary to have a state to track the "Coordinates (2, 2)" message for the user.
-    // You can use the `getXY` helper above to obtain the coordinates, and then `getXYMessage`
-    // returns the fully constructed string.
-  }
 
   function reset() {
-    // Use this helper to reset all states to their initial values.
     setEmail("");
     setMessage("");
     setX(2);
@@ -36,40 +26,6 @@ export default function AppFunctional(props) {
     setSteps(0);
   }
 
-  // function getNextIndex(direction) {
-  //   const minX = 1;
-  //   const minY = 1;
-  //   const maxX = 3;
-  //   const maxY = 3;
-
-  //   let nextX = x
-  //   // console.log("this is x", nextX)
-  //   let nextY = y
-  //   // console.log("this is y" , nextY)
-
-  //   switch (direction) {
-  //     case "left":
-  //       nextX = (Math.max(minX, x - 1));
-  //       console.log(nextX);
-  //       break;
-  //     case "right":
-  //       nextX = Math.min(maxX, x + 1);
-  //       console.log(nextX);
-  //       break;
-  //     case "up":
-  //       nextY = Math.max(minY, y - 1);
-  //       console.log(nextY);
-  //       break;
-  //     case "down":
-  //       nextY = Math.min(maxY, y + 1);
-  //       console.log(nextY);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-
-  //   return { nextX, nextY };
-  // }
 
   function move(direction) {
     const minX = 1;
@@ -78,9 +34,7 @@ export default function AppFunctional(props) {
     const maxY = 3;
 
     let nextX = x;
-    // console.log("this is x", nextX)
     let nextY = y;
-    // console.log("this is y" , nextY)
 
     switch (direction) {
       case "left":
@@ -201,7 +155,6 @@ export default function AppFunctional(props) {
       .then((response) => {
         setEmail("");
         setMessage(response.data.message);
-        // console.log(response)
       })
       .catch((error) => {
         if (email === "foo@bar.baz") {
