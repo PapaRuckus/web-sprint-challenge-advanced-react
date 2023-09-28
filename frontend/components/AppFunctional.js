@@ -174,12 +174,18 @@ export default function AppFunctional(props) {
 
   useEffect(() => {
     setTarget({ x, y });
-    setMessage("")
+    setMessage("");
   }, [x, y]);
 
   function onChange(evt) {
     evt.preventDefault();
     setEmail(evt.target.value);
+  }
+
+
+  function isValidEmail(email) {
+    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    return emailPattern.test(email);
   }
 
   function onSubmit(evt) {
@@ -200,9 +206,10 @@ export default function AppFunctional(props) {
       .catch((error) => {
         if (email === "foo@bar.baz") {
           setMessage(error.response.data.message);
-          // console.log(error)
-        } else {
+        } else if (email === "") {
           setMessage("Ouch: email is required");
+        } else if (!isValidEmail(email)) {
+          setMessage("Ouch: email must be a valid email");
         }
       });
   }
@@ -217,7 +224,9 @@ export default function AppFunctional(props) {
         <h3 id="coordinates">
           Coordinates ({x}, {y})
         </h3>
-        <h3 id="steps">You moved {steps} times</h3>
+        <h3 id="steps">
+          You moved {steps} time{steps === 1 ? "" : "s"}
+        </h3>
       </div>
 
       <div id="grid">

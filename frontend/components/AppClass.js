@@ -59,8 +59,11 @@ export default class AppClass extends React.Component {
     this.setState({ email: evt.target.value });
   };
 
+  isValidEmail(email) {
+    const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    return emailPattern.test(email);
+  }
   onSubmit = (evt) => {
-    // Use a POST request to send a payload to the server.
     evt.preventDefault();
     const payload = {
       x: this.state.x,
@@ -76,9 +79,11 @@ export default class AppClass extends React.Component {
       .catch((error) => {
         if (this.state.email === "foo@bar.baz") {
           this.setState({ message: error.response.data.message });
-        } else {
+        } else if (this.state.email === "") {
           this.setState({ message: "Ouch: email is required" });
-        }
+        } else if (!this.isValidEmail(this.state.email)) {
+          this.setState({ message: "Ouch: email must be a valid email" });
+        } 
       });
   };
 
@@ -205,7 +210,9 @@ export default class AppClass extends React.Component {
           <h3 id="coordinates">
             Coordinates ({x}, {y})
           </h3>
-          <h3 id="steps">You moved {steps} times</h3>
+          <h3 id="steps">
+            You moved {steps} time{steps === 1 ? "" : "s"}
+          </h3>
         </div>
         <div id="grid">
           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
