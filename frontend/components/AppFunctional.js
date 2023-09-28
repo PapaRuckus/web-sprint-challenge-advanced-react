@@ -103,19 +103,19 @@ export default function AppFunctional(props) {
     }
     if (nextX < 1) {
       nextX = 1;
-      setMessage("you cant go left");
+      setMessage("You can't go left");
     }
     if (nextX > 3) {
       nextX = 3;
-      setMessage("you cant go right");
+      setMessage("You cant go right");
     }
     if (nextY < 1) {
       nextY = 1;
-      setMessage("you cant go up");
+      setMessage("You cant go up");
     }
     if (nextY > 3) {
       nextY = 3;
-      setMessage("you cant go down");
+      setMessage("You cant go down");
     }
 
     setX(nextX);
@@ -125,8 +125,6 @@ export default function AppFunctional(props) {
   useEffect(() => {
     setTarget({ x, y });
   }, [x, y]);
-
-  // console.log(getItWorking(0))
 
   function onChange(evt) {
     evt.preventDefault();
@@ -162,7 +160,7 @@ export default function AppFunctional(props) {
     setSteps(steps + 1);
   }
 
-  function getItWorking(index) {
+  function movingB(index) {
     //Get the css attribute grid-template-columns from the css of class grid
     //split on whitespace and get the length, this will give you how many columns
     let rowPosition;
@@ -225,11 +223,8 @@ export default function AppFunctional(props) {
 
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
-          <div
-            key={idx}
-            className={`square${getItWorking(idx) ? " active" : ""}`}
-          >
-            {getItWorking(idx) ? "B" : ""}
+          <div key={idx} className={`square${movingB(idx) ? " active" : ""}`}>
+            {movingB(idx) ? "B" : ""}
           </div>
         ))}
       </div>
