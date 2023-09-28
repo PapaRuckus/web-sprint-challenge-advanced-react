@@ -132,7 +132,7 @@ export default class AppClass extends React.Component {
   movingB = (index) => {
     let rowPosition;
     let colPosition;
-    const newTarget = this.state.target
+    const newTarget = this.state.target;
 
     switch (index) {
       case 0:
@@ -176,13 +176,17 @@ export default class AppClass extends React.Component {
 
     const results = { colPosition, rowPosition };
     return (
-      newTarget.x === Object.values(results)[0] && newTarget.y === Object.values(results)[1]
+      newTarget.x === Object.values(results)[0] &&
+      newTarget.y === Object.values(results)[1]
     );
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.x !== prevState.x || this.state.y !== prevState.y) {
-      this.setState({ target: { x: this.state.x, y: this.state.y }, message: "" });
+      this.setState({
+        target: { x: this.state.x, y: this.state.y },
+        message: "",
+      });
     }
   }
 
@@ -205,8 +209,11 @@ export default class AppClass extends React.Component {
         </div>
         <div id="grid">
           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
-            <div key={idx} className={`square${idx === 4 ? " active" : ""}`}>
-              {idx === 4 ? "B" : null}
+            <div
+              key={idx}
+              className={`square${this.movingB(idx) ? " active" : ""}`}
+            >
+              {this.movingB(idx) ? "B" : null}
             </div>
           ))}
         </div>
