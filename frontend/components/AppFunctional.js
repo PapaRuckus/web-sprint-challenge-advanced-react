@@ -134,6 +134,7 @@ export default function AppFunctional(props) {
   function onChange(evt) {
     evt.preventDefault();
     setEmail(evt.target.value);
+    // console.log("Email State:", email);
   }
 
 
@@ -191,7 +192,7 @@ export default function AppFunctional(props) {
       </div>
 
       <div className="info">
-        <h3 id="message">{message}</h3>
+        <h3 id="message" data-testid="message">{message}</h3>
       </div>
       <div id="keypad">
         <button id="left" onClick={() => move("left")}>
@@ -213,13 +214,14 @@ export default function AppFunctional(props) {
       </div>
       <form onSubmit={onSubmit}>
         <input
+          data-testid="email"
           id="email"
           type="email"
           placeholder="type email"
           onChange={onChange}
           value={email}
         ></input>
-        <input id="submit" type="submit"></input>
+        <input id="submit" type="submit" data-testid="submit"></input>
       </form>
     </div>
   );
